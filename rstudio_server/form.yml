@@ -25,14 +25,7 @@ attributes:
   #     modules: "python/3.5"
   # @example Using combination of modules
   #     modules: "python/3.5 cuda/8.0.44"
-  #modules: "python"
-  #modules: "rstudio-singularity/4.0.4"
-  custom_environment:
-    widget: text_area
-    label: Environment Setup (drag text area to enlarge)
-    help: "Enter commands (module load, source activate, etc) to create your desired rstudio environment; rstudio MUST be on your path. If you don't have one yet use 'module load rstudio-singularity'"
-    value: |
-        module load rstudio-singularity/4.0.4 
+  modules: ""
 
   # Any extra command line arguments to feed to the `rserver ...`
   # command that launches the Jupyter notebook within the batch job
@@ -53,6 +46,14 @@ attributes:
     min: 5
     step: 1
     help: "Maximum wall time is 1 week"
+  rstudio_image:
+    label: RStudio Singularity Image
+    help: Enter a path to a RStudio Server Image
+    value: '/juno/work/shah/users/mcphera1/rstudio/rocker-custom_latest.sif'
+  r_packages:
+    label: R packages
+    help: Enter a path to installed R packages
+    value: '/work/shah/users/mcphera1/rstudio/packages/'
 
 # All of the attributes that make up the Dashboard form (in respective order),
 # and made available to the submit configuration file and the template ERB
@@ -69,3 +70,5 @@ form:
   - queue
   - num_cores
   - num_mins
+  - rstudio_image
+  - r_packages

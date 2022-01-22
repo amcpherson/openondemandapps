@@ -25,14 +25,7 @@ attributes:
   #     modules: "python/3.5"
   # @example Using combination of modules
   #     modules: "python/3.5 cuda/8.0.44"
-  #modules: "python"
-  modules: "jupyter/4.9.1 cuda/11.3"
-  custom_environment:
-    widget: text_area
-    label: Environment Setup (drag text area to enlarge)
-    help: "Enter commands (module load, source activate, etc) to create your desired jupyter notebook environment; jupyter MUST be on your path. If you don't have one yet use 'module load jupyter/4.9.1'"
-    value: |
-        module load jupyter/4.9.1 cuda/11.3
+  modules: ""
 
   # Any extra command line arguments to feed to the `jupyter notebook ...`
   # command that launches the Jupyter notebook within the batch job
@@ -40,7 +33,7 @@ attributes:
 
   queue:
     label: "Queue"
-    value: "gpuqueue"
+    value: "general"
   num_cores:
     widget: "number_field"
     label: "Number of cores"
@@ -57,13 +50,6 @@ attributes:
     min: 5
     step: 1
     help: "Maximum wall time is 1 week"
-  num_gpus:
-    widget: "number_field"
-    label: "Number of GPUs"
-    value: 1
-    help: "Maximum number of GPUs is 4"
-    min: 1
-    step: 1
   jupyter_binary:
     label: Jupyter Binary
     help: Enter a path to the jupyter binary

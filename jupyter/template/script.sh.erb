@@ -3,8 +3,9 @@
 # Benchmark info
 echo "TIMING - Starting main script at: $(date)"
 
-# Set working directory to home directory
+# Set working directory to specified directory
 cd "${HOME}"
+cd <%= context.notebook_directory %>
 
 #
 # Start Jupyter Notebook Server
@@ -25,7 +26,6 @@ module list
 echo "TIMING - Starting jupyter at: $(date)"
 
 # Launch the Jupyter Notebook Server
-cd <%= context.notebook_directory %>
 set -x
 <%= context.jupyter_binary %> notebook --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
 

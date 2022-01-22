@@ -7,13 +7,11 @@ setup_env () {
 }
 setup_env
 
-#  module load rstudio-singularity/4.0.4
-
 #
 # Start RStudio Server
 #
 
-export R_LIBS_USER=/home/mcphersa1/R/library-ood-4.0.4
+export R_LIBS_USER="/packages"
 
 # PAM auth helper used by RStudio
 export RSTUDIO_AUTH="${PWD}/bin/auth"
@@ -57,21 +55,6 @@ set -x
 # Launch the RStudio Server
 echo "Starting up rserver..."
 
-export RSTUDIO_SINGULARITY_IMAGE1='/juno/work/shah/users/mcphera1/rstudio/rocker-custom_latest.sif'
-
-#singularity exec --bind=rsession.conf:/etc/rstudio/rsession.conf --bind=rserver.conf:/etc/rstudio/rserver.conf \
-#  --bind ./tmp:/tmp \
-#  --bind ./packages:/packages \
-#  --bind myrun:/run \
-#  --bind=/juno/work \
-#  --bind var_lib_rstudio-server:/var/lib/rstudio-server \
-#  --no-home --bind=/scratch/mcphersa1/home/mcphersa1:/home/mcphersa1 \
-#  --env DISABLE_AUTH=true --env PASSWORD='test' \
-#  /work/shah/william1/singularity/rstudio_julia_latest.sif \
-#  /usr/lib/rstudio-server/bin/rserver --auth-none=0 --auth-pam-helper-path=pam-helper
-
-# -B /work/shah/users/mcphera1/rstudio/home/:/home/mcphersa1 \
-
 export RSTUDIO_USER="${USER}"
 
 echo $USER
@@ -83,8 +66,8 @@ singularity exec -B "$TMPDIR:/tmp" -B "$TMPDIR/run:/run" \
  -B "$TMPDIR/var-lib-rstudio-server:/var/lib/rstudio-server" \
  -B "$TMPDIR/local-share-rstudio:/home/rstudio/.local/share/rstudio" \
  -B "/juno/work:/work" -B "/juno/res:/res" \
- -B /work/shah/users/mcphera1/rstudio/packages:/packages \
- "$RSTUDIO_SINGULARITY_IMAGE1" rserver \
+ -B <%= context.r_packages %>:/packages \
+ "<%= context.rstudio_image %>" rserver \
  --server-user="${RSTUDIO_USER}" \
  --www-port="${port}" \
  --auth-none=0 \
