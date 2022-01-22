@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+# Load the required environment
+setup_env () {
+  module purge
+  module load singularity/3.6.2
+}
+setup_env
+
+#  module load rstudio-singularity/4.0.4
+
+#
+# Start RStudio Server
+#
+
+export R_LIBS_USER=/home/mcphersa1/R/library-ood-4.0.4
+
+# PAM auth helper used by RStudio
+export RSTUDIO_AUTH="${PWD}/bin/auth"
+
+# Generate an `rsession` wrapper script
+export RSESSION_WRAPPER_FILE="${PWD}/rsession.sh"
+(
+umask 077
+sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
+  #!/usr/bin/env bash
+
+  # Log all output from this script
+  export RSESSION_LOG_FILE="${PWD}/rsession.log"
+
+  exec &>>"\${RSESSION_LOG_FILE}"
+
+  # Launch the original command
+  echo "Launching rsession..."
+  set -x
+  exec rsession --r-libs-user "${R_LIBS_USER}" "\${@}"
+EOL
+)
+chmod 700 "${RSESSION_WRAPPER_FILE}"
+
+# Set working directory to home directory
+cd "${HOME}"
+
+# Output debug info
+module list
+
+# echo old TMPDIR $TMPDIR
+export TMPDIR=`mktemp -d`
+# echo new TMPDIR $TMPDIR
+
+mkdir -p $TMPDIR/{run,var-lib-rstudio-server,local-share-rstudio}
+
+## fix rstudio active session error on start
+find ~/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -i '' -e 's/abend="1"/abend="0"/'
+
+set -x
+# Launch the RStudio Server
+echo "Starting up rserver..."
+
+export RSTUDIO_SINGULARITY_IMAGE1='/juno/work/shah/users/mcphera1/rstudio/rocker-custom_latest.sif'
+
+#singularity exec --bind=rsession.conf:/etc/rstudio/rsession.conf --bind=rserver.conf:/etc/rstudio/rserver.conf \
+#  --bind ./tmp:/tmp \
+#  --bind ./packages:/packages \
+#  --bind myrun:/run \
+#  --bind=/juno/work \
+#  --bind var_lib_rstudio-server:/var/lib/rstudio-server \
+#  --no-home --bind=/scratch/mcphersa1/home/mcphersa1:/home/mcphersa1 \
+#  --env DISABLE_AUTH=true --env PASSWORD='test' \
+#  /work/shah/william1/singularity/rstudio_julia_latest.sif \
+#  /usr/lib/rstudio-server/bin/rserver --auth-none=0 --auth-pam-helper-path=pam-helper
+
+# -B /work/shah/users/mcphera1/rstudio/home/:/home/mcphersa1 \
+
+export RSTUDIO_USER="${USER}"
+
+echo $USER
+echo $PASSWORD
+echo $RSTUDIO_USER
+echo $RSTUDIO_PASSWORD
+
+singularity exec -B "$TMPDIR:/tmp" -B "$TMPDIR/run:/run" \
+ -B "$TMPDIR/var-lib-rstudio-server:/var/lib/rstudio-server" \
+ -B "$TMPDIR/local-share-rstudio:/home/rstudio/.local/share/rstudio" \
+ -B "/juno/work:/work" -B "/juno/res:/res" \
+ -B /work/shah/users/mcphera1/rstudio/packages:/packages \
+ "$RSTUDIO_SINGULARITY_IMAGE1" rserver \
+ --server-user="${RSTUDIO_USER}" \
+ --www-port="${port}" \
+ --auth-none=0 \
+ --auth-pam-helper-path="${RSTUDIO_AUTH}" \
+ --auth-encrypt-password=0 \
+ --rsession-path="${RSESSION_WRAPPER_FILE}" \
+
+# note, rserver in the container will start with the user space environment defined on host
+# BUT, the rsession starts on limited environment, only related to R = no SLURM*, http*, ...
+# so anything we want to pass to rsession needs to be set in $RSESSION_WRAPPER_FILE

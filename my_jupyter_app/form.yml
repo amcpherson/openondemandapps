@@ -1,0 +1,95 @@
+# Batch Connect app configuration file
+#
+# @note Used to define the submitted cluster, title, description, and
+#   hard-coded/user-defined attributes that make up this Batch Connect app.
+---
+
+# **MUST** set cluster id here that matches cluster configuration file located
+# under /etc/ood/config/clusters.d/*.yml
+# @example Use the Owens cluster at Ohio Supercomputer Center
+#     cluster: "owens"
+cluster: "juno"
+
+# Define attribute values that aren't meant to be modified by the user within
+# the Dashboard form
+attributes:
+  # Set the corresponding modules that need to be loaded for Jupyter to run
+  #
+  # @note It is called within the batch job as `module load <modules>` if
+  #   defined
+  # @example Do not load any modules
+  #     modules: ""
+  # @example Using default python module
+  #     modules: "python"
+  # @example Using specific python module
+  #     modules: "python/3.5"
+  # @example Using combination of modules
+  #     modules: "python/3.5 cuda/8.0.44"
+  #modules: "python"
+  modules: "jupyter/4.9.1 cuda/11.3"
+  custom_environment:
+    widget: text_area
+    label: Environment Setup (drag text area to enlarge)
+    help: "Enter commands (module load, source activate, etc) to create your desired jupyter notebook environment; jupyter MUST be on your path. If you don't have one yet use 'module load jupyter/4.9.1'"
+    value: |
+        module load jupyter/4.9.1 cuda/11.3
+
+  # Any extra command line arguments to feed to the `jupyter notebook ...`
+  # command that launches the Jupyter notebook within the batch job
+  extra_jupyter_args: ""
+
+  queue:
+    label: "Queue"
+    value: "gpuqueue"
+  num_cores:
+    widget: "number_field"
+    label: "Number of cores"
+    value: 2
+    help: "Maximum number of CPU cores is 72"
+    min: 2
+    step: 1
+  memory:
+    value: 8
+    step: 4
+    help: "Requested memory"
+  num_mins:
+    value: 60
+    min: 5
+    step: 1
+    help: "Maximum wall time is 1 week"
+  num_gpus:
+    widget: "number_field"
+    label: "Number of GPUs"
+    value: 1
+    help: "Maximum number of GPUs is 4"
+    min: 1
+    step: 1
+  jupyter_binary:
+    label: Jupyter Binary
+    help: Enter a path to the jupyter binary
+    value: ''
+  notebook_directory:
+    label: Notebooks directory
+    help: Enter a path to the notebooks
+    value: ''
+
+
+# All of the attributes that make up the Dashboard form (in respective order),
+# and made available to the submit configuration file and the template ERB
+# files
+#
+# @note You typically do not need to modify this unless you want to add a new
+#   configurable value
+# @note If an attribute listed below is hard-coded above in the `attributes`
+#   option, then it will not appear in the form page that the user sees in the
+#   Dashboard
+form:
+  - modules
+  - extra_jupyter_args
+  - queue
+  - num_cores
+  - num_mins
+  - memory
+  - jupyter_binary
+  - notebook_directory
+
