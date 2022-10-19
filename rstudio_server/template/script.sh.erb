@@ -31,7 +31,7 @@ sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
   # Launch the original command
   echo "Launching rsession..."
   set -x
-  exec rsession --r-libs-user "${R_LIBS_USER}" "\${@}"
+  exec /usr/lib/rstudio-server/bin/rsession --r-libs-user "${R_LIBS_USER}" "\${@}"
 EOL
 )
 chmod 700 "${RSESSION_WRAPPER_FILE}"
