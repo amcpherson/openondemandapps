@@ -41,6 +41,10 @@ attributes:
     help: "Maximum number of CPU cores is 72"
     min: 2
     step: 1
+  memory:
+    value: 8
+    step: 4
+    help: "Requested memory"
   num_mins:
     value: 60
     min: 5
@@ -69,6 +73,7 @@ form:
   - extra_rstudio_args
   - queue
   - num_cores
+  - memory
   - num_mins
   - rstudio_image
   - r_packages
