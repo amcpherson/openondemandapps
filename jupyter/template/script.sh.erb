@@ -27,5 +27,5 @@ echo "TIMING - Starting jupyter at: $(date)"
 
 # Launch the Jupyter Notebook Server
 set -x
-<%= context.jupyter_binary %> notebook --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
+<%= context.jupyter_binary %> --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
 
