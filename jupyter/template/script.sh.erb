@@ -27,5 +27,9 @@ echo "TIMING - Starting jupyter at: $(date)"
 
 # Launch the Jupyter Notebook Server
 set -x
+<%- if context.conda_env.empty? -%>
 <%= context.jupyter_binary %> --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
+<%- else -%>
+conda run -n <%= context.conda_env %> <%= context.jupyter_binary %> --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
+<%- end -%>
 

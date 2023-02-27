@@ -54,6 +54,10 @@ attributes:
     label: Jupyter Binary
     help: Enter a path to the jupyter binary
     value: ''
+  conda_env:
+    label: Conda Environment Name
+    help: Enter the name of the conda environment to use
+    value: ''
   notebook_directory:
     label: Notebooks directory
     help: Enter a path to the notebooks
@@ -77,5 +81,6 @@ form:
   - num_mins
   - memory
   - jupyter_binary
+  - conda_env
   - notebook_directory
 
