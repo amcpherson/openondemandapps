@@ -37,9 +37,9 @@ attributes:
   num_cores:
     widget: "number_field"
     label: "Number of cores"
-    value: 2
+    value: 1
     help: "Maximum number of CPU cores is 72"
-    min: 2
+    min: 1
     step: 1
   memory:
     value: 8
