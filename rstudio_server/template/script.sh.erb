@@ -31,10 +31,18 @@ sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
   # Launch the original command
   echo "Launching rsession..."
   set -x
-  exec /usr/lib/rstudio-server/bin/rsession --r-libs-user "${R_LIBS_USER}" "\${@}"
+  exec /usr/lib/rstudio-server/bin/rsession "\${@}"
 EOL
 )
 chmod 700 "${RSESSION_WRAPPER_FILE}"
+
+export RSESSION_CONFIG_FILE="${PWD}/rsession.conf"
+(
+sed 's/^ \{2\}//' > "${RSESSION_CONFIG_FILE}" << EOL
+  # rsession config
+  r-libs-user="${R_LIBS_USER}"
+EOL
+)
 
 # Set working directory to home directory
 cd "${HOME}"
@@ -61,6 +69,7 @@ echo $USER
 echo $PASSWORD
 echo $RSTUDIO_USER
 echo $RSTUDIO_PASSWORD
+echo ${RSESSION_CONFIG_FILE}
 
 singularity exec -B "$TMPDIR:/tmp" -B "$TMPDIR/run:/run" \
  -B "$TMPDIR/var-lib-rstudio-server:/var/lib/rstudio-server" \
@@ -73,6 +82,7 @@ singularity exec -B "$TMPDIR:/tmp" -B "$TMPDIR/run:/run" \
  --auth-none=0 \
  --auth-pam-helper-path="${RSTUDIO_AUTH}" \
  --auth-encrypt-password=0 \
+ --rsession-config-file="${RSESSION_CONFIG_FILE}" \
  --rsession-path="${RSESSION_WRAPPER_FILE}" \
 
 # note, rserver in the container will start with the user space environment defined on host
