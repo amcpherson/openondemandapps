@@ -74,7 +74,7 @@ echo ${RSESSION_CONFIG_FILE}
 singularity exec -B "$TMPDIR:/tmp" -B "$TMPDIR/run:/run" \
  -B "$TMPDIR/var-lib-rstudio-server:/var/lib/rstudio-server" \
  -B "$TMPDIR/local-share-rstudio:/home/rstudio/.local/share/rstudio" \
- -B "/juno/work:/work" -B "/juno/res:/res" \
+ -B "/data1:/data1" \
  -B <%= context.r_packages %>:/packages \
  "<%= context.rstudio_image %>" rserver \
  --server-user="${RSTUDIO_USER}" \
