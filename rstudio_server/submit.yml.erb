@@ -13,10 +13,14 @@ batch_connect:
 script:
   queue_name: "<%= queue %>"
   native: # ... array of command line arguments ...
-     - "-p"
+     - "--partition"
      - "<%= queue %>"
-     - "-n"
-     - "1"
-     - "-N"
+     - "--nodes"
+     - 1
+     - "--ntasks"
      - "<%= num_cores %>"
+     - "--mem"
+     - "<%= memory %>G"
+     - "--time"
+     - "0-<%= num_hours %>:00:00"
 

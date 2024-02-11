@@ -33,7 +33,7 @@ attributes:
 
   queue:
     label: "Queue"
-    value: "cpu"
+    value: "componc"
   num_cores:
     widget: "number_field"
     label: "Number of cores"
@@ -45,9 +45,9 @@ attributes:
     value: 8
     step: 4
     help: "Requested memory"
-  num_mins:
-    value: 60
-    min: 5
+  num_hours:
+    value: 2
+    min: 1
     step: 1
     help: "Maximum wall time is 1 week"
   rstudio_image:
@@ -74,6 +74,6 @@ form:
   - queue
   - num_cores
   - memory
-  - num_mins
+  - num_hours
   - rstudio_image
   - r_packages

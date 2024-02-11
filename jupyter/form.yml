@@ -45,9 +45,9 @@ attributes:
     value: 8
     step: 4
     help: "Requested memory"
-  num_mins:
-    value: 60
-    min: 5
+  num_hours:
+    value: 2
+    min: 1
     step: 1
     help: "Maximum wall time is 1 week"
   jupyter_binary:
@@ -78,7 +78,7 @@ form:
   - extra_jupyter_args
   - queue
   - num_cores
-  - num_mins
+  - num_hours
   - memory
   - jupyter_binary
   - conda_env
